@@ -213,11 +213,12 @@ int sys_setsid(void)
 	return current->pgrp;
 }
 
-int sys_uname(struct utsname * name)
-{
-	static struct utsname thisname = {
+static struct utsname thisname = {
 		"linux .0","nodename","release ","version ","machine "
 	};
+int sys_uname(struct utsname * name)
+{
+	
 	int i;
 
 	if (!name) return -ERROR;
@@ -234,3 +235,29 @@ int sys_umask(int mask)
 	current->umask = mask & 0777;
 	return (old);
 }
+
+#define MAXHOSTNAMELEN 8
+
+int sys_sethostname(char *name, int len)
+{
+	int i;
+	printk("euid:%d\n", current->euid);
+	if(!suser())
+		return -EPERM;
+	if(len > MAXHOSTNAMELEN)
+		return -EINVAL;
+	for(i = 0; i<len; ++i)
+	{
+		if((thisname.nodename[i] = get_fs_byte(name+i)) == 0)
+			break;
+	}
+
+	if(thisname.nodename[i])
+	{
+		thisname.nodename[i>MAXHOSTNAMELEN ? MAXHOSTNAMELEN : i] = 0;
+	}
+
+
+	return 0;
+}	
+
