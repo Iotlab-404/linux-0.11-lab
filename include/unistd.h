@@ -130,6 +130,7 @@
 #define __NR_setreuid	70
 #define __NR_setregid	71
 #define __NR_sethostname 72
+#define __NR_reboot		73
 
 
 #define _syscall0(type,name) \
@@ -254,5 +255,5 @@ pid_t getpgrp(void);
 pid_t setsid(void);
 //new add 
 int sethostname(char *name, int len);
-
+int reboot(void);
 #endif

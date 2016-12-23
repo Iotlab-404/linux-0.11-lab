@@ -12,7 +12,7 @@
 #include <asm/segment.h>
 #include <sys/times.h>
 #include <sys/utsname.h>
-
+#include <asm/io.h>
 int sys_ftime()
 {
 	return -ENOSYS;
@@ -261,3 +261,11 @@ int sys_sethostname(char *name, int len)
 	return 0;
 }	
 
+ 
+int sys_reboot(void)
+{
+	int i;
+    for (i = 0; i < 10000; i++) {
+		outb(0xfe, 0x64); /* Pulse reset low */
+	}
+}
