@@ -53,11 +53,13 @@ int sys_access(const char * filename,int mode)
 	if (!(inode=namei(filename)))
 		return -EACCES;
 	i_mode = res = inode->i_mode & 0777;
-	iput(inode);
+	
 	if (current->uid == inode->i_uid)
 		res >>= 6;
 	else if (current->gid == inode->i_gid)
 		res >>= 6;
+
+	iput(inode); //XXX change it,because it must be after judged so to iput 
 	if ((res & 0007 & mode) == mode)
 		return 0;
 	/*
