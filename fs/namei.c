@@ -729,10 +729,12 @@ int sys_link(const char * oldname, const char * newname)
 	oldinode=namei(oldname);
 	if (!oldinode)
 		return -ENOENT;
+	/*
 	if (S_ISDIR(oldinode->i_mode)) {
 		iput(oldinode);
 		return -EPERM;
 	}
+	*/
 	dir = dir_namei(newname,&namelen,&basename);
 	if (!dir) {
 		iput(oldinode);
